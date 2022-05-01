@@ -14,12 +14,16 @@ Parameters:
 
 History:
   Date        Author    Description
-  2022-03-11  J.Dalby   Initial creation
+  2022-03-11  J.Dalby   Initial creation 
 """
 from sys import argv, exit
 from datetime import datetime, date
 from hashlib import sha256
 from os import path
+
+import requests
+import sqlite3
+import json
 
 def main():
 
@@ -37,9 +41,10 @@ def main():
     apod_info_dict = get_apod_info(apod_date)
     
     # Download today's APOD
-    image_url = "TODO"
+    image_url = apod_info_dict['url']
     image_msg = download_apod_image(image_url)
-    image_sha256 = "TODO"
+    print(image_msg)
+    image_sha256 = 
     image_size = -1 # TODO
     image_path = get_image_path(image_url, image_dir_path)
 
@@ -116,7 +121,23 @@ def get_apod_info(date):
     :param date: APOD date formatted as YYYY-MM-DD
     :returns: Dictionary of APOD info
     """    
-    return {"todo" : "TODO"}
+    nasaAPI = "EMwuI4VvmRz1wy7lwzfzXwrXjektW832S3gBEEjN"
+
+    apodURL = 'https://api.nasa.gov/planetary/apod/'
+    params = {
+        'api_key': nasaAPI,
+        'date': date,
+    }
+
+    response = requests.get(apodURL,params=params)
+
+    if response.status_code == 200:
+        print("Getting APOD info from NASA... success!")        
+    else:
+        print("Close, but no cigar", response.status_code)
+
+    url = response.json()['url']
+    return {'url':url}
 
 def print_apod_info(image_url, image_path, image_size, image_sha256):
     """
@@ -137,7 +158,15 @@ def download_apod_image(image_url):
     :param image_url: URL of image
     :returns: Response message that contains image data
     """
-    return "TODO"
+
+    urlresponse = requests.get(image_url)
+
+    if urlresponse.status_code == 200:
+        print("downloading APOD from NASA... success!")
+    else:
+        print("Close, but no cigar", urlresponse.status_code)
+
+    return urlresponse.content
 
 def save_image_file(image_msg, image_path):
     """
@@ -157,7 +186,17 @@ def create_image_db(db_path):
     :param db_path: Path of .db file
     :returns: None
     """
-    return #TODO
+
+    #Retrieve Connection Object and create a cursor object
+    connection = sqlite3.connect('db_path')
+    cursor = connection.cursor()
+
+    #create the database
+    cursor.execute('''CREATE TABLE IF NOT EXISTS apod_images
+                    (date TEXT)''')
+    connection.commit()
+
+    return
 
 def add_image_to_db(db_path, image_path, image_size, image_sha256):
     """
