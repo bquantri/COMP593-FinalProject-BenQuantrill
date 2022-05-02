@@ -1,0 +1,108 @@
+COMP593 - Final Project - BenQuantrill
+
+Work Log
+
+2022/04/30 - Repository Created
+- Created github repo for final project
+
+2022/04/30, 5:00pm - copied template
+- copied final project template from D2L and added it to Github Repository
+
+2022/04/30, 5:30pm - create-image-db function
+- added code for the function
+
+2022/04/30, 8:30pm - get_apod_info(date)
+- added code for the function 
+- (had to troubleshoot image_db function before I could continue)
+
+2022/05/01 12:00am - Trying to fix create_image_db
+- close to getting it working, know how to create db,
+continue to recieve syntax error
+
+	   12:15am - update
+-fixed syntax error (extra comma)
+- able to continue onto other functions
+
+2022/05/01 1:30am - get_apod_info
+- problem with attribute error not allowing me to use .status_code
+ to verify http request - fixed by removing .json() from api request
+
+2022/05/01 12:00pm - get_apod_info
+- having problems returning the url of the day, able to make connection no problem.
+
+	   1:00pm - update
+- able to return dictionary with date and url no problems!
+
+	   1:30pm - update
+- just kidding apparently, apod_info_dict, should finlly be working tho
+
+2022/05/01  2:30pm get_apod_info
+- Working on downloading today's apod
+- made get request to url, have to figure out what to do with downloaded image
+
+2022/05/01  3:05pm image_url
+- retrieved url from function, fixed error in return statement
+- added to main() function
+
+2022/05/01, 3:40pm image_msg
+-worked on image message function
+- created respopnse code statement
+-returned response.content from request, worked first try!
+
+2022/05/01  5:30pm image_sha256
+- imported hashlib as existing module caused errors with my method
+- attached to image_msg, slight fiddling, working quickly
+
+
+2022/05/01 7:00pm - image_size
+- managed to get image size working with slight trial and error  
+
+2022/05/01 7:10pm - get_image_path
+- having trouble implementing this function
+I know the steps: remove name from last part of url, join name to directory path saved earlier
+return new path to main(), just need to figure out how to implement
+
+	   8:20pm - update
+- managed to extract last part of url, need to join to directory path
+
+		
+	   9:30pm - update
+- managed to extract last part and join to directoy path, able to proceed to next function
+
+2022/05/01 10:20pm - image_sha256
+- wasn't displaying correct value, added .hexdigest() to fix
+- need to also fix file size, displayed number seems to small (after checking, wasn't too small, just that file)
+
+2022/05/01 10:30pm - create_image_db
+- had to create more data fields, causing syntax error, managed to fix after trail and error 
+
+	   11:22pm - update
+-fixed for real this time
+
+2022/05/01 10:45pm - image_already_in_db
+-began work on this function
+- first part working, not sure if querying database correctly
+- if statement to determine match, hopefully not too shoddy, looks like it should work
+
+2022/05/01 11:30pm - save_image_file
+- checked dicussion post after failing with google solutions
+- managed to get working
+
+2022/05/02 12:00am - add_image_to_db
+- created variable to insert data into db according to Lab 3 as reference
+- received multiple syntax errors with INSERT INTO, fixed by checking comma and brace placement
+- after troubleshooting information 
+- receiving error where it will not allow me to insert date into date column without further errors,
+won't support datetime as a type, will allow me to sub db_path with no errors oddly enough
+
+
+2022/05/02 12:35am - image_already_in_db
+- found error, function does not seem to be checking hash values.
+
+2022/05/02 1:10am set_desktop_background_image
+- Found simple code instructions on youtube to change desktop background using ctypes module
+- executed code changed background on first try
+- executing subsequesnt different APOD will change desktop background
+- resolution poor
+
+
