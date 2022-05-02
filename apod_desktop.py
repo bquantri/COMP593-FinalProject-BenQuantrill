@@ -25,6 +25,7 @@ import hashlib
 import requests
 import sqlite3
 import os
+import ctypes
 
 def main():
 
@@ -188,7 +189,13 @@ def save_image_file(image_msg, image_path):
     :param image_path: Path to save image file
     :returns: None
     """
-    return #TODO
+
+    with open(image_path, 'wb') as handler:
+        handler.write(image_msg)
+
+    print("Saving Image File... Success!")
+
+    return
 
 def create_image_db(db_path):
     """
@@ -199,13 +206,20 @@ def create_image_db(db_path):
     """
 
     #Retrieve Connection Object and create a cursor object
-    connection = sqlite3.connect('db_path')
+    connection = sqlite3.connect(db_path)
     cursor = connection.cursor()
 
     #create the database
-    cursor.execute('''CREATE TABLE IF NOT EXISTS apod_images
-                    (date TEXT)''')
+    image_db = '''CREATE TABLE IF NOT EXISTS apod_images (
+                    "date" TEXT,
+                    "full_path" TEXT,
+                    "File_size" TEXT,
+                    "SHA_256" TEXT
+                    ) '''
+
+    cursor.execute(image_db)
     connection.commit()
+    connection.close()
 
     return
 
@@ -219,7 +233,27 @@ def add_image_to_db(db_path, image_path, image_size, image_sha256):
     :param image_sha256: SHA-256 of image
     :returns: None
     """
-    return #TODO
+
+    connect = sqlite3.connect(db_path)
+    cursor = connect.cursor()
+
+    apod_to_db = """INSERT INTO apod_images (
+                    "date",
+                    "full_path",
+                    "File_size",
+                    "SHA_256")
+                    VALUES (?, ?, ?, ?) """
+
+    image_info = (db_path,
+                  image_path,
+                  image_size,
+                  image_sha256,)
+
+    cursor.execute(apod_to_db, image_info)
+    connect.commit()
+    connect.close()
+
+    return
 
 def image_already_in_db(db_path, image_sha256):
     """
@@ -230,8 +264,24 @@ def image_already_in_db(db_path, image_sha256):
     :param image_sha256: SHA-256 of image
     :returns: True if image is already in DB; False otherwise
     """ 
-    return True #TODO
 
+    connection = sqlite3.connect(db_path)
+    cursor = connection.cursor()
+
+    compareHash = """SELECT SHA_256 FROM apod_images
+                     WHERE SHA_256"""
+    
+    cursor.execute(compareHash)
+    results = cursor.fetchall()
+
+    if results == image_sha256:
+        print("New Image already in database")
+        return True
+    elif results != image_sha256:
+        print("New Image not in cache")
+        return False
+    
+     
 def set_desktop_background_image(image_path):
     """
     Changes the desktop wallpaper to a specific image.
@@ -239,6 +289,12 @@ def set_desktop_background_image(image_path):
     :param image_path: Path of image file
     :returns: None
     """
+
+    set_wallpaper = image_path
+    ctypes.windll.user32.SystemParametersInfoW(20, 0, set_wallpaper, 3)
+
+    print("setting Desktop Wallpaper... Success!")
+
     return #TODO
 
 main()
