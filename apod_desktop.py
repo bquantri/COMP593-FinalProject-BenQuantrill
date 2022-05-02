@@ -21,9 +21,10 @@ from datetime import datetime, date
 from hashlib import sha256
 from os import path
 
+import hashlib
 import requests
 import sqlite3
-import json
+import os
 
 def main():
 
@@ -43,9 +44,8 @@ def main():
     # Download today's APOD
     image_url = apod_info_dict['url']
     image_msg = download_apod_image(image_url)
-    print(image_msg)
-    image_sha256 = 
-    image_size = -1 # TODO
+    image_sha256 = hashlib.sha256(image_msg).hexdigest()
+    image_size = -1 + len(image_msg)
     image_path = get_image_path(image_url, image_dir_path)
 
     # Print APOD image information
@@ -111,7 +111,12 @@ def get_image_path(image_url, dir_path):
     :param dir_path: Path of directory in which image is saved locally
     :returns: Path at which image is saved locally
     """
-    return "TODO"
+
+    new_image_url = os.path.basename(os.path.normpath(image_url))
+
+    os.path.normpath(dir_path)
+
+    return os.path.join(dir_path, new_image_url)
 
 def get_apod_info(date):
     """
@@ -149,6 +154,12 @@ def print_apod_info(image_url, image_path, image_size, image_sha256):
     :param image_sha256: SHA-256 of image
     :returns: None
     """    
+    print("APOD Information:")
+    print("     URL:", image_url)
+    print("     File Path:", image_path)
+    print("     File Size:", image_size, "bytes")
+    print("     SHA-256:", image_sha256)
+
     return #TODO
 
 def download_apod_image(image_url):
